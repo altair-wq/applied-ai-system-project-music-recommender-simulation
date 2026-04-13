@@ -67,7 +67,7 @@ You can add more tests in `tests/test_recommender.py`.
 
 ## Experiments You Tried
 
-We tested four diverse user profiles to see how the system reacted:
+I tested four diverse user profiles to see how the system reacted:
 1. **High-Energy Pop (Gym Hero)**: Successfully favored pop songs with high energy like 'Gym Hero' and 'Sunrise City'.
 2. **Chill Lofi (Study Session)**: Brought up chill, lofi tracks with appropriately low energy, demonstrating how well genre and mood aligned with target energy.
 3. **Deep Intense Rock**: Captured rock anthems immediately but also surfaced an intense EDM track due to matching maxed-out energy and the "intense" mood requirement.
@@ -93,8 +93,8 @@ Because: genre match (+2.0), energy similarity (+0.92)
 ## Limitations and Risks
 
 - **Over-prioritization of Genre**: With genre rated at +2.0, an amazing track spanning other parameters might be completely buried simply because of a genre mismatch.
-- **Tiny Catalog limitation**: We are prone to surfacing the exact same tracks whenever user requirements mirror a specific label closely.
-- **Limited Nuance**: We don't examine subgenres or contextual flags (e.g., decade of release), treating all "rock" as identically matched.
+- **Tiny Catalog limitation**: I am prone to surfacing the exact same tracks whenever user requirements mirror a specific label closely.
+- **Limited Nuance**: I don't examine subgenres or contextual flags (e.g., decade of release), treating all "rock" as identically matched.
 
 ---
 
@@ -106,4 +106,4 @@ Read and complete `model_card.md`:
 
 Building this system illustrated exactly how quickly an AI goes from a "blank slate" to a highly opinionated agent that forces users down narrow funnels. A mathematical approach to music inherently prioritizes quantifiable features (tempo, energy metadata) over harder-to-define "vibe" markers, leading to an extremely literal translation of human taste.
 
-A key revelation was how algorithm bias acts as an echo chamber. When evaluating our 'Sad EDM' profile, instead of finding a nuanced middle-ground (an atmospheric high-energy trap track), the system aggressively fragmented. It returned either a happy hyper-energetic EDM track or a clinically sad classical piece. In reality, taste is deeply intersecting, not purely additive, meaning real-world algorithms need complex non-linear models to truly 'understand' what the user feels.
+A key revelation was how algorithm bias acts as an echo chamber. When evaluating my 'Sad EDM' profile, instead of finding a nuanced middle-ground (an atmospheric high-energy trap track), the system aggressively fragmented. It returned either a happy hyper-energetic EDM track or a clinically sad classical piece. In reality, taste is deeply intersecting, not purely additive, meaning real-world algorithms need complex non-linear models to truly 'understand' what the user feels.
