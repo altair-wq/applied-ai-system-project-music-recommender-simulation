@@ -123,7 +123,25 @@ def recommend_songs(user_prefs: Dict, songs: List[Dict], k: int = 5) -> List[Tup
     scored_songs = []
     for song in songs:
         score, reasons = score_song(user_prefs, song)
-        scored_songs.append((song, score, ", ".join(reasons)))
+        scored_songs.append((song, score, reasons.copy()))
         
     scored_songs.sort(key=lambda x: x[1], reverse=True)
-    return scored_songs[:k]
+    
+    seen_genres = set()
+    penalized_songs = []
+    for song, score, reasons in scored_songs:
+        genre = song.get('genre')
+        if genre in seen_genres:
+            score -= 0.5
+            reasons.append("diversity penalty (-0.5)")
+        else:
+            seen_genres.add(genre)
+        penalized_songs.append((song, score, reasons))
+        
+    penalized_songs.sort(key=lambda x: x[1], reverse=True)
+    
+    final_songs = []
+    for song, score, reasons in penalized_songs:
+        final_songs.append((song, score, ", ".join(reasons)))
+        
+    return final_songs[:k]
