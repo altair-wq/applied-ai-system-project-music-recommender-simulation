@@ -74,19 +74,13 @@ I tested four diverse user profiles to see how the system reacted:
 4. **Conflicting Profile (Sad EDM)**: The system hit a filter bubble. A genre match for "edm" and an extreme energy of 0.9 clashed with a mood of "sad". The top result was 'Deep Bass Rumble' (purely on genre + energy), while 'Sad Piano' placed second (mood match) despite its very low energy pulling its score down heavily. 
 
 **Terminal Output Snapshot:**
-```
-======================================
-Profile: High-Energy Pop (Gym Hero)
-Preferences: {'genre': 'pop', 'mood': 'intense', 'energy': 0.9}
-======================================
-Top recommendations:
+before optional part was done:
+![alt text](image-1.png)
+![alt text](image.png)
 
-Gym Hero - Score: 3.97
-Because: genre match (+2.0), mood match (+1.0), energy similarity (+0.97)
-
-Sunrise City - Score: 2.92
-Because: genre match (+2.0), energy similarity (+0.92)
-```
+after optional part was done: 
+![alt text](image-2.png)
+![alt text](image-3.png)
 
 ---
 
