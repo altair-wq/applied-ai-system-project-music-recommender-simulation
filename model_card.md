@@ -1,70 +1,66 @@
-# 🎧 Model Card: Music Recommender Simulation
+# Model Card: Music Discovery AI Assistant
 
-## 1. Model Name  
+## Model/System Name
+Music Discovery AI Assistant (Project 4)
 
-**VibeFinder 1.0 (Content-Based Simulation)**
+## Goal / Task
+The goal of this system is to act as an intelligent music recommendation assistant. It takes natural language user queries, extracts music preferences, retrieves helpful context from a knowledge base, scores songs based on the user's profile, and provides a final response that includes recommendations, confidence scoring, and explanations.
 
----
+## Original Module 3 Base Project
+This system builds upon the CodePath AI110 Module 3 "Music Recommender Simulation." The base project successfully implemented a weighted scoring algorithm (using genre, mood, and energy) to rank songs from a CSV file against a static user taste profile.
 
-## 2. Intended Use  
+## Data Used
+- `data/songs.csv`: A synthetic dataset of songs containing attributes like genre, mood, energy, tempo, valence, and acousticness.
+- `data/knowledge_base.txt`: A simple text file containing rules and facts about music recommendation (e.g., how genre and mood affect scores, limitations of recommenders).
 
-This model is intended for educational exploration of content-based music recommendation algorithms. It generates small, ranked lists of tracks for hypothetical listener personas. It is strictly a classroom simulation designed to highlight algorithm bias and data representation issues. It is NOT intended for commercial use or deployed in any real application, as its heuristic approach does not capture the multidimensionality of actual musical preference.
+## Algorithm Summary
+1. **Preference Parsing**: Extracts keywords (genre, mood, energy indicators) from the user query.
+2. **RAG Retrieval**: Uses simple token overlap to retrieve the most relevant facts from the knowledge base based on the user query.
+3. **Scoring**: Calculates a score for each song by comparing its attributes to the parsed preferences (genre match = +2.0, mood match = +1.0, energy similarity = up to +1.0).
+4. **Guardrails**: Checks for unsupported domains (e.g., movies, medical advice) and low-confidence results.
+5. **Confidence Scoring**: Normalizes the average score of the top recommendations into a 0.0 - 1.0 confidence value.
 
----
+## RAG/Retrieval Summary
+The RAG component is implemented using a custom, lightweight Python retriever (`RagAssistant`). It splits the knowledge base text into chunks and uses a basic word intersection (overlap) algorithm to find chunks that match the vocabulary of the user's query.
 
-## 3. How the Model Works  
+## Guardrails
+- **Domain Guardrail**: Rejects queries containing keywords unrelated to music (e.g., "movies", "health").
+- **Quality Guardrail**: Warns the user if the top recommended songs produce an average confidence score below 0.3, indicating the dataset lacks songs that strongly match the user's complex preferences.
 
-VibeFinder 1.0 scores songs entirely based on content metadata. It completely ignores what other users are doing and strictly looks to answer one question: "How closely does this song match the user's specific request parameters?"
+## Observed Behavior and Biases
+- **Filter Bubble**: The system heavily favors exact genre matches. If a user only asks for "pop", they will only see pop songs. A small diversity penalty exists but may not be enough to introduce entirely new genres.
+- **Limited Nuance**: The simple keyword parser can misinterpret complex natural language (e.g., "I don't want pop" might still trigger the "pop" genre if not carefully handled).
 
-It does this by looking at three core features:
-- **Genre**: If the genre is a 1-to-1 exact string match, the song earns a significant 2.0 point boost.
-- **Mood**: If the mood matches exactly, the song earns an additional 1.0 point.
-- **Energy**: Energy is treated as a dial from 0.0 to 1.0. I calculate the absolute distance between what the user wanted and what the song provides, resulting in up to 1.0 point for an exact match. Points drop linearly as the energetic distance grows.
+## Evaluation Process
+The system is evaluated using an automated test harness (`evaluator.py`) that runs 6 distinct test cases from `tests/test_cases.json`, covering happy paths, edge cases, and out-of-domain requests.
 
----
+## Testing Results
+- The system correctly handles standard requests (e.g., "chill study songs", "high-energy gym").
+- The domain guardrail successfully blocks out-of-scope requests.
+- Queries with conflicting preferences (e.g., "sad edm") gracefully return results but with a lower confidence score.
 
-## 4. Data  
+## Intended Use
+For users looking to discover new music based on specific activities, moods, or genres within a controlled, safe dataset.
 
-The original dataset contained exactly 10 mock songs spanning genres like pop, lofi, rock, and ambient. I augmented the catalog manually, adding 6 new mock tracks to a total of 16. Included in my additions were more varieties of electronic, edm, classical, and indie. However, this dataset remains severely undersized and reflects incredibly simplified taste categorizations that do not capture subgenres, global sounds, or distinct artist eras.
+## Non-Intended Use
+- Providing non-music recommendations (e.g., movies, medical advice).
+- Replacing professional, large-scale recommendation systems like Spotify or Apple Music.
 
----
+## Limitations
+- The dataset is extremely small (15-20 songs).
+- The parser is primitive and lacks true semantic understanding (it relies on hardcoded keywords).
+- The RAG system does not use dense vector embeddings, so it struggles with synonyms.
 
-## 5. Strengths  
+## Possible Misuse and Prevention
+- **Misuse**: Users attempting to bypass the system to get inappropriate or out-of-domain advice.
+- **Prevention**: Hardcoded keyword blocklists in the guardrails module prevent the system from engaging with sensitive or non-music topics.
 
-VibeFinder is incredibly consistent. For single-dimensional users who want precisely one type of music ("Chill Lofi for studying", "High Energy Pop for the gym"), the logic behaves flawlessly. Its extreme emphasis on genre combined with distance-matching on numerical energy ensures that when the user asks for a category, that category immediately surfaces to the top. The simplistic heuristic models are highly interpretable—you always know *why* a song was recommended.
+## Ideas for Improvement
+- Integrate a real LLM API (like OpenAI or Gemini) for better natural language understanding and preference extraction.
+- Expand the dataset to thousands of songs.
+- Upgrade the RAG system to use a vector database (like ChromaDB or FAISS) for semantic search instead of token overlap.
 
----
-
-## 6. Limitations and Bias 
-
-VibeFinder struggles catastrophically with nuanced taste due to its reliance on hard-coded heuristics. 
-- Over-index on Genre: By granting "genre match" an overwhelming +2.0 weight, I run the risk of creating a massive filter bubble. A user asking for 'Rock' will be drowned in Rock music, even if a high-energy Pop anthem matches their 'intense' and 'high-energy' profile better.
-- Demographic Ignore: It doesn't factor in era, popularity, or language. 
-- The "Conflicting Profile" Bug: If a user specifies conflicting preferences (e.g., they want a song with high energy, but a 'sad' mood), the model fractures and returns chaotic overlaps because it doesn't understand the intersectional context of these tags. It treats variables independently.
-
----
-
-## 7. Evaluation  
-
-I evaluated VibeFinder against four highly targeted user profiles, using standard printing heuristics to ensure the list felt somewhat intuitive.
-1. High-Energy Pop (Gym Hero)
-2. Chill Lofi (Study Session)
-3. Deep Intense Rock
-4. Conflicting Profile (Sad EDM)
-
-For 1, 2, and 3, my manually set weights of (+2 genre, +1 mood) achieved perfect alignment, returning the expected mock tracks at the exact top slots. Profile 4 surprised me by highlighting the algorithm's vulnerability edge-case: when conflicting dimensions arise, rather than recommending atmospheric high-energy tracks, the math breaks down and begins surfacing tracks based almost exclusively on random single-variable matches, heavily penalizing any track that fails a primary category.
-
----
-
-## 8. Future Work  
-
-If given more time, I would implement:
-1. **Diversity Penalties**: A rule that depreciates the score of a track if a track by the exact same artist (or in the exact same genre) has already been recommended 2 or 3 times in the output. This prevents filter bubbles.
-2. **Normalized Distances**: Applying Euclidean distance formulas across multiple audio features (danceability, valence, bpm) synchronously, rather than adding disparate flat points (+1 or +2) to a base.
-3. **Collaborative Elements**: Injecting a "popularity" node or "users also liked" node to emulate massive neural network deployments.
-
----
-
-## 9. Personal Reflection  
-
-This project fundamentally highlighted the translation error between human "vibes" and mathematical heuristics. I learned that algorithms are intrinsically literal. They do not know what "music" is, they only know metadata values. It was surprising to see how quickly a simple +2 weight created an unshakeable filter bubble where the user became trapped inside one genre regardless of energy fit. This radically changes how I view apps like TikTok or Spotify; their AI models must be doing thousands of hyper-complex non-linear mappings just to simulate what human judgment handles intuitively in seconds. Human curatorial touch still absolutely rules in bridging conflicting emotional states that simple math just can't categorize.
+## AI Collaboration Reflection
+- **One helpful AI suggestion**: The AI suggested using a simple normalized average of the recommender scores to create a "confidence score," which elegantly reused the existing logic without adding complex probability math.
+- **One flawed AI suggestion**: Initially, the AI suggested using `sklearn` for TF-IDF in the RAG module.
+- **How I verified or corrected the AI output**: I realized `scikit-learn` was not in our `requirements.txt` and I wanted to keep the project simple without adding heavy dependencies, so I corrected the approach to use a lightweight token overlap algorithm using built-in Python standard libraries.

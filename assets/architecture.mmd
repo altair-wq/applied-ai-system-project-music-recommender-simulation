@@ -1,0 +1,17 @@
+graph TD
+    UserQuery[User Query] --> Parser[Preference Parser]
+    UserQuery --> Guardrail[Guardrail + Confidence Check]
+    
+    Parser --> Recommender[Song Recommender]
+    Songs[(songs.csv)] --> Recommender
+    
+    UserQuery --> RAG[RAG Retriever]
+    KB[(knowledge_base.txt)] --> RAG
+    
+    Recommender --> Guardrail
+    
+    Guardrail --> Response[Final Recommendation Response]
+    RAG --> Response
+    
+    TestCases[(test_cases.json)] -.-> Evaluator[evaluator.py]
+    Evaluator -.-> Summary[Reliability Summary]

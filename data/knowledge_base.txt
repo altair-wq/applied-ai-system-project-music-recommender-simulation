@@ -1,0 +1,9 @@
+Music Recommender Knowledge Base
+
+1. Genre matching: Matching the user's requested genre strongly increases the likelihood they will enjoy the song, as it captures the overall style and instrumentation they expect. We add +2.0 to the score for a genre match.
+2. Mood matching: Mood is critical for contextual recommendations (e.g., studying, gym, relaxing). Matching the exact mood provides a +1.0 score boost.
+3. Energy matching: Energy represents intensity and activity level. We calculate energy similarity by taking the absolute difference between the target energy and song energy. A closer match yields a higher score boost, up to +1.0.
+4. Tempo matching: Tempo (BPM) strongly correlates with energy. Fast tempos (120+ BPM) are better for high-energy activities like the gym, while slow tempos (<90 BPM) are better for chill or sad moods.
+5. Limitations of simple recommenders: Simple recommenders relying solely on weighted linear scoring can suffer from limited personalization and lack of nuance in understanding complex user tastes.
+6. Filter bubble bias: Recommending only what perfectly matches the user's explicit profile can create a filter bubble, preventing them from discovering new genres or styles they might also enjoy. To mitigate this, a diversity penalty is applied to repeated genres.
+7. Confidence score: The confidence score reflects how well the retrieved songs match the requested profile. Low confidence can occur if the dataset lacks songs that match the specific combination of genre, mood, and energy requested by the user.

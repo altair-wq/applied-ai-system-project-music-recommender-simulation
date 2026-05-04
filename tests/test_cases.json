@@ -1,0 +1,38 @@
+[
+  {
+    "name": "Normal Happy Pop",
+    "query": "I want happy pop music",
+    "expected_behavior": "Should return high-confidence pop songs with happy mood.",
+    "should_pass": true
+  },
+  {
+    "name": "Chill Study",
+    "query": "Recommend chill songs for studying",
+    "expected_behavior": "Should return low-energy chill songs like lofi.",
+    "should_pass": true
+  },
+  {
+    "name": "High Energy Gym",
+    "query": "I want high-energy pop songs for the gym",
+    "expected_behavior": "Should return intense, high-energy tracks.",
+    "should_pass": true
+  },
+  {
+    "name": "Sad Acoustic",
+    "query": "Suggest sad acoustic music",
+    "expected_behavior": "Should return sad/slow music, possibly classical or folk.",
+    "should_pass": true
+  },
+  {
+    "name": "Unsupported Request",
+    "query": "Can you recommend some good movies?",
+    "expected_behavior": "Guardrail should block the request.",
+    "should_pass": false
+  },
+  {
+    "name": "Low Context / Weird Request",
+    "query": "Play some intense jazz edm classical for sleep",
+    "expected_behavior": "Might return recommendations but with low confidence due to conflicting parameters.",
+    "should_pass": true
+  }
+]
