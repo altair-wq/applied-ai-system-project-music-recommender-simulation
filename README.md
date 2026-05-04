@@ -92,4 +92,4 @@ An automated test harness (`evaluator.py`) runs 6 distinct queries against the s
 Building this Applied AI System taught me how to wrap a core algorithm in an "agentic" shell. Adding guardrails and RAG context completely changed how the application feels—it's no longer just a math script, but a responsive assistant. The most challenging part was deciding how to calculate a meaningful "confidence score" without true probabilities, which I solved by normalizing the recommender's weighted scores.
 
 ## Loom Video
-[[Add Loom link here](https://www.loom.com/share/e1c5d9abebf84125afdc14c8589915b3)]
+[[Video Walkthrough](https://www.loom.com/share/e1c5d9abebf84125afdc14c8589915b3)]
